@@ -30,13 +30,40 @@ new CronJob('0 */1 * * * *', function () { // Every minutes
 // GET DATA
 // ==========
 app.get('/data', function (req, res) {
+  // init
   console.info('[' + new Date() + '] Request players.json from ' + req.ip)
   res.setHeader('Content-Type', 'application/json') // is json
+  // limit
+  if (req.query !== undefined && req.query.limit !== undefined)
+    var limit = parseInt(req.query.limit)
+  // query
+  db.query('SELECT count, time FROM players' + (limit ? ' LIMIT ' + limit : ''), function (err, rows, fields) {
+    if (err || rows === undefined || rows.length === 0) {
+      if (err) console.error(err)
+      return res.json([])
+    }
+    var result = []
+    for (var i = 0; i < rows.length; i++) {
+      result.push({
+        count: rows[i].count,
+        time: (new Date(rows[i].time)).getTime()
+      })
+    }
+    res.json(result)
+  })
 })
 // Max players
 app.get('/max', function (req, res) {
   console.info('[' + new Date() + '] Request max players from ' + req.ip)
   res.setHeader('Content-Type', 'application/json') // is json
+  // query
+  db.query('SELECT count FROM players ORDER BY count DESC LIMIT 1', function (err, rows, fields) {
+    if (err || rows === undefined || rows.length === 0) {
+      if (err) console.error(err)
+      return res.json({max: 0})
+    }
+    res.json({max: rows.count})
+  })
 })
 // Peak hours
 // Peak days

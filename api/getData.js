@@ -8,7 +8,7 @@ module.exports = function (ip, port, db) {
     if (err) return console.error('Error when ping', err)
     // save
     var players = res.players.online
-    db.query("INSERT INTO players SET `count` = ?, `time` = ?", [players, Date.now()], function (err, rows, fields) {
+    db.query("INSERT INTO players SET `count` = ?, `time` = ?", [players, (new Date())], function (err, rows, fields) {
       if (err) return console.error('Error when save into db', err)
     })
   })
