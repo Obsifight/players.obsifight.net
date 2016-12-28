@@ -1,0 +1,16 @@
+{
+  "name": "ping-players",
+  "version": "1.0.0",
+  "description": "Ping players from ObsiFight Bungee",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eywek <contact@eywek.fr>",
+  "license": "ISC",
+  "dependencies": {
+    "cron": "^1.2.1",
+    "express": "^4.14.0",
+    "mc-ping-updated": "^0.1.0"
+  }
+}
