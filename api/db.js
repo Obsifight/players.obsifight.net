@@ -7,6 +7,5 @@ module.exports = function (config) {
     database: config.database,
     connectionLimit: 10
   })
-  connection.connect()
   return connection
 }
