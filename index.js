@@ -23,7 +23,7 @@ app.get('/', function (req, res) {
 // UPDATE DATA
 // ===========
 new CronJob('0 */1 * * * *', function () { // Every minutes
-  require('./api/getData')(config.mc.ip, config.mc.port, global.db)
+  require('./api/getData')(global.config.mc.ip, global.config.mc.port, global.db)
 }, null, true, 'Europe/Paris')
 
 // ==========
