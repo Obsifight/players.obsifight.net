@@ -36,8 +36,18 @@ app.get('/data', function (req, res) {
   // limit
   if (req.query !== undefined && req.query.limit !== undefined)
     var limit = parseInt(req.query.limit)
+  // where
+  if (req.query !== undefined && req.query.superiorDate !== undefined)
+    var superiorThan = req.query.superiorDate
+  if (req.query !== undefined && req.query.inferiorDate !== undefined)
+    var inferiorThan = req.query.inferiorDate
+  var where = ''
+  if (superiorThan || inferiorThan) where += ' WHERE time'
+  if (superiorThan) where += " > '" + superiorThan + "'"
+  if (superiorThan && inferiorThan) where += ' AND time'
+  if (inferiorThan) where += " < '" + inferiorThan + "'"
   // query
-  db.query('SELECT count, time FROM players' + (limit ? ' LIMIT ' + limit : '') + ' ORDER BY id DESC', function (err, rows, fields) {
+  db.query('SELECT count, time FROM players' + where + ' ORDER BY id DESC' + (limit ? ' LIMIT ' + limit : ''), function (err, rows, fields) {
     if (err || rows === undefined || rows.length === 0) {
       if (err) console.error(err)
       return res.json([])
