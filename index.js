@@ -2,10 +2,10 @@
 // INIT
 // ==========
 var express = require('express')
-var fs = require('fs')
 var CronJob = require('cron').CronJob
-var _ = require('underscore')
 var app = express()
+var config = require('./config/config')
+var db = require('./api/db')(config.db)
 
 // ==========
 // HOMEPAGE
@@ -23,7 +23,7 @@ app.get('/', function (req, res) {
 // UPDATE DATA
 // ===========
 new CronJob('0 */1 * * * *', function () { // Every minutes
-  require('./api/getData')('149.202.201.146', '4545')
+  require('./api/getData')(config.mc.ip, config.mc.port, global.db)
 }, null, true, 'Europe/Paris')
 
 // ==========
@@ -32,34 +32,14 @@ new CronJob('0 */1 * * * *', function () { // Every minutes
 app.get('/data', function (req, res) {
   console.info('[' + new Date() + '] Request players.json from ' + req.ip)
   res.setHeader('Content-Type', 'application/json') // is json
-  // data
-  if (req.query !== undefined && req.query.limit !== undefined) {
-    var limit = parseInt(req.query.limit)
-    fs.readFile('./data/players.json', function (err, data) {
-      if (err) return console.error('Error when read file', err)
-      data = JSON.parse(data)
-      var start = data.length - limit
-      data = data.slice(start)
-      res.json(data)
-    })
-  } else {
-    fs.createReadStream('./data/players.json').pipe(res) // pipe cache file
-  }
 })
+// Max players
 app.get('/max', function (req, res) {
   console.info('[' + new Date() + '] Request max players from ' + req.ip)
   res.setHeader('Content-Type', 'application/json') // is json
-  fs.readFile('./data/players.json', function (err, data) {
-    if (err) return console.error('Error when read file', err)
-    var max = _.max(JSON.parse(data), function (el) {
-      return el.count
-    })
-    // response
-    res.json({
-      max: max.count
-    })
-  })
 })
+// Peak hours
+// Peak days
 
 // ==========
 // LISTEN

@@ -1,8 +1,6 @@
 var mcping = require('mc-ping-updated')
-var fs = require('fs')
-var file = './data/players.json'
 
-module.exports = function (ip, port) {
+module.exports = function (ip, port, db) {
   port = port || 25565
   console.info('-- Ping ' + ip + ':' + port + ' --')
 
@@ -10,20 +8,8 @@ module.exports = function (ip, port) {
     if (err) return console.error('Error when ping', err)
     // save
     var players = res.players.online
-    // read file
-    fs.readFile(file, function (err, data) {
-      if (err) return console.error('Error when read file', err)
-      // parse json
-      data = JSON.parse(data)
-      // push into json
-      data.push({
-        time: Date.now(),
-        count: players
-      })
-      // write in file
-      fs.writeFile(file, JSON.stringify(data), function (err) {
-        if (err) return console.error('Error when write file', err)
-      })
+    db.query("INSERT INTO players SET `count` = ?, `time` = ?", [players, Date.now()], function (err, rows, fields) {
+      if (err) return console.error('Error when save into db', err)
     })
-  }, 3000)
+  })
 }
