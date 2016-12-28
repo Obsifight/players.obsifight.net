@@ -11,6 +11,7 @@
   "dependencies": {
     "cron": "^1.2.1",
     "express": "^4.14.0",
-    "mc-ping-updated": "^0.1.0"
+    "mc-ping-updated": "^0.1.0",
+    "underscore": "^1.8.3"
   }
 }

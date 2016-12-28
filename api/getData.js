@@ -16,9 +16,10 @@ module.exports = function (ip, port) {
       // parse json
       data = JSON.parse(data)
       // push into json
-      var result = {}
-      result[Date.now()] = players
-      data.push(result)
+      data.push({
+        time: Date.now(),
+        count: players
+      })
       // write in file
       fs.writeFile(file, JSON.stringify(data), function (err) {
         if (err) return console.error('Error when write file', err)
