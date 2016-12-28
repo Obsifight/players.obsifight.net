@@ -33,21 +33,29 @@ app.get('/data', function (req, res) {
   // init
   console.info('[' + new Date() + '] Request players.json from ' + req.ip)
   res.setHeader('Content-Type', 'application/json') // is json
+  // params
+  var params = []
   // limit
-  if (req.query !== undefined && req.query.limit !== undefined)
+  if (req.query !== undefined && req.query.limit !== undefined) {
     var limit = parseInt(req.query.limit)
+    params.push(limit)
+  }
   // where
-  if (req.query !== undefined && req.query.superiorDate !== undefined)
+  if (req.query !== undefined && req.query.superiorDate !== undefined) {
     var superiorThan = req.query.superiorDate
-  if (req.query !== undefined && req.query.inferiorDate !== undefined)
+    params.push(superiorThan)
+  }
+  if (req.query !== undefined && req.query.inferiorDate !== undefined) {
     var inferiorThan = req.query.inferiorDate
+    params.push(inferiorThan)
+  }
   var where = ''
   if (superiorThan || inferiorThan) where += ' WHERE time'
-  if (superiorThan) where += " > '" + superiorThan + "'"
+  if (superiorThan) where += ' > ?'
   if (superiorThan && inferiorThan) where += ' AND time'
-  if (inferiorThan) where += " < '" + inferiorThan + "'"
+  if (inferiorThan) where += ' < ?'
   // query
-  db.query('SELECT count, time FROM players' + where + ' ORDER BY id DESC' + (limit ? ' LIMIT ' + limit : ''), function (err, rows, fields) {
+  db.query('SELECT count, time FROM players' + where + ' ORDER BY id DESC' + (limit ? ' LIMIT ?' : ''), params, function (err, rows, fields) {
     if (err || rows === undefined || rows.length === 0) {
       if (err) console.error(err)
       return res.json([])
