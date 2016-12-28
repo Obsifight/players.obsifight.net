@@ -4,8 +4,8 @@
 var express = require('express')
 var CronJob = require('cron').CronJob
 var app = express()
-var global.config = require('./config/config')
-var global.db = require('./api/db')(config.db)
+global.config = require('./config/config')
+global.db = require('./api/db')(config)
 
 // ==========
 // HOMEPAGE
