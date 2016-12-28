@@ -83,7 +83,7 @@ app.get('/stats/peak-times/hours', function (req, res) {
     // formatting
     var data = {}
     for (var i = 0; i < rows.length; i++) {
-      data[rows[i].hour] = Math.round(rows[i].average_players)
+      data[rows[i].hour] = rows[i].average_players.toFixed()
     }
     res.json(data)
   })
@@ -133,7 +133,7 @@ app.get('/stats/peak-times/days', function (req, res) {
         default:
           break
       }
-      data[day] = Math.round(rows[i].average_players)
+      data[day] = rows[i].average_players.toFixed()
     }
     res.json(data)
   })
