@@ -4,8 +4,8 @@
 var express = require('express')
 var CronJob = require('cron').CronJob
 var app = express()
-var config = require('./config/config')
-var db = require('./api/db')(config.db)
+var global.config = require('./config/config')
+var global.db = require('./api/db')(config.db)
 
 // ==========
 // HOMEPAGE
@@ -23,7 +23,7 @@ app.get('/', function (req, res) {
 // UPDATE DATA
 // ===========
 new CronJob('0 */1 * * * *', function () { // Every minutes
-  require('./api/getData')(global.config.mc.ip, global.config.mc.port, global.db)
+  require('./api/getData')(config.mc.ip, config.mc.port, db)
 }, null, true, 'Europe/Paris')
 
 // ==========
