@@ -35,11 +35,6 @@ app.get('/data', function (req, res) {
   res.setHeader('Content-Type', 'application/json') // is json
   // params
   var params = []
-  // limit
-  if (req.query !== undefined && req.query.limit !== undefined) {
-    var limit = parseInt(req.query.limit)
-    params.push(limit)
-  }
   // where
   if (req.query !== undefined && req.query.superiorDate !== undefined) {
     var superiorThan = req.query.superiorDate
@@ -54,6 +49,11 @@ app.get('/data', function (req, res) {
   if (superiorThan) where += ' > ?'
   if (superiorThan && inferiorThan) where += ' AND time'
   if (inferiorThan) where += ' < ?'
+  // limit
+  if (req.query !== undefined && req.query.limit !== undefined) {
+    var limit = parseInt(req.query.limit)
+    params.push(limit)
+  }
   // query
   db.query('SELECT count, time FROM players' + where + ' ORDER BY id DESC' + (limit ? ' LIMIT ?' : ''), params, function (err, rows, fields) {
     if (err || rows === undefined || rows.length === 0) {
